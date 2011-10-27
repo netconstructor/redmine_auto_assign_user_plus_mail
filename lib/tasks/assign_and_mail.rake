@@ -7,7 +7,7 @@ class RB_Assigner < Mailer
   def  self.reminders_all(options={})
 
 
-    p options
+#    p options
    
     tracker = options[:tracker] ? Tracker.find(options[:tracker]) : nil 
     role = options[:role] ? Role.find(options[:role]) : nil
@@ -39,8 +39,8 @@ class RB_Assigner < Mailer
 
       possible_assignees = issue.project.users_by_role
       unless possible_assignees[role].blank?
-        p  issue.assigned_to_id = possible_assignees[role].shuffle!.first.id
-        # issue.save
+          issue.assigned_to_id = possible_assignees[role].shuffle!.first.id
+         issue.save
         assignee_list.each do |assignee|
           
           if assignee[0].mail== issue.assigned_to.mail then
