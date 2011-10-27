@@ -1,0 +1,12 @@
+en:
+  mail_subject_reminder_all1: "{{count}} issue has been assigned"
+  mail_body_reminder_auth1: "{{count}} issue that was created by you has been assigned:"
+  mail_body_reminder_assigned1: "{{count}} issue has been assigned to you:"
+  
+  mail_subject_reminder_all2: "{{count}} issues have been assigned"
+  mail_body_reminder_auth2: "{{count}} issues that were created by you have been assigned:"
+  mail_body_reminder_assigned2: "{{count}} issues have been assigned to you:"
+ 
+  mail_subject_reminder_all5: "{{count}} issues have been assigned"
+  mail_body_reminder_auth5: "{{count}} issues that were created by you have been assigned:"
+  mail_body_reminder_assigned5: "{{count}} issues have been assigned to you:"

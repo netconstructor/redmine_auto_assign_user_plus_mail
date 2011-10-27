@@ -1,0 +1,3 @@
+= redmine_auto_assign_user_plus_mail
+
+Description goes here
