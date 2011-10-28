@@ -1,6 +1,8 @@
 require File.expand_path(File.dirname(__FILE__) + "/../../../../../config/environment")
 require "mailer"
-#require "actionmailer"
+require 'soap/wsdlDriver'
+require 'digest/md5'
+require 'iconv'
 
 class RB_Assigner < Mailer
 
@@ -10,8 +12,12 @@ class RB_Assigner < Mailer
 #    p options
    
     tracker = options[:tracker] ? Tracker.find(options[:tracker]) : nil 
-    role = options[:role] ? Role.find(options[:role]) : nil
+    role = options[:role] ? Role.find(options[:role]) : 1
     status = options[:status] ? IssueStatus.find(options[:status]) :1
+    login_sms= options[:login]
+
+    password_sms=  options[:password] ? Digest::MD5.new << options[:password] : nil
+
 
     s = ARCondition.new ["#{Issue.table_name}.status_id = #{status.id}"] if status #jeśli status się zgadza
     s << "#{Issue.table_name}.assigned_to_id IS NULL"                          #jeśli czy nie jest dopisane
@@ -40,7 +46,7 @@ class RB_Assigner < Mailer
       possible_assignees = issue.project.users_by_role
       unless possible_assignees[role].blank?
           issue.assigned_to_id = possible_assignees[role].shuffle!.first.id
-         issue.save
+      #   issue.save
         assignee_list.each do |assignee|
           
           if assignee[0].mail== issue.assigned_to.mail then
@@ -94,7 +100,7 @@ class RB_Assigner < Mailer
       |x,y| x[0].mail+x[1] <=> y[0].mail+y[1]
     end
     previous_user = author_list[0][0] unless author_list[0].nil?
-    # watched_tasks = Array.new
+
     auth_tasks = Array.new
     assigned_tasks = Array.new
     sent_issues = Array.new
@@ -121,7 +127,11 @@ class RB_Assigner < Mailer
 
       else
 
-        deliver_send_mail(previous_user, assigned_tasks, auth_tasks) unless previous_user.nil?
+  #      deliver_send_mail(previous_user, assigned_tasks, auth_tasks) unless previous_user.nil?
+   #     deliver_send_sms(previous_user, assigned_tasks, auth_tasks) unless previous_user.nil?
+   send_sms(previous_user, assigned_tasks,login_sms, password_sms) unless previous_user.nil?
+
+
         assigned_tasks.clear
         auth_tasks.clear
         sent_issues.clear
@@ -139,12 +149,64 @@ class RB_Assigner < Mailer
       end
       previous_user=user
     end
-    deliver_send_mail(previous_user, assigned_tasks, auth_tasks) unless previous_user.nil?
-
+  #  deliver_send_mail(previous_user, assigned_tasks, auth_tasks) unless previous_user.nil?
+   # deliver_send_sms(previous_user, assigned_tasks, auth_tasks) unless previous_user.nil?
+    send_sms(previous_user, assigned_tasks,login_sms, password_sms) unless previous_user.nil?
 
     
   end
 
+  def self.send_sms(user, assigned_issues,login_sms, password_sms)
+
+
+
+
+if assigned_issues.length > 0
+case assigned_issues.length
+  when 1 then message="In4mates, masz #{assigned_issues.size} nowe zadanie:"
+ when 2..4 then message="In4mates, masz #{assigned_issues.size} nowe zadania:"
+else message="In4mates, masz #{assigned_issues.size} nowych zadań:"
+end
+
+assigned_issues.each do |issue| 
+  message << " * #{issue.project} - #{issue.tracker} ##{issue.id}: #{issue.subject}"
+end
+
+       phone = "48" + user.custom_field_values.first.value
+
+      if phone
+
+wsdl = 'https://ssl.smsapi.pl/webservices/v2/?wsdl'
+driver = SOAP::WSDLDriverFactory.new(wsdl).create_rpc_driver
+
+driver.wiredump_dev = STDOUT
+
+    response =  driver.get_points({:username =>login_sms, :password => password_sms.to_s})
+
+
+ if response.points.to_i >1 then
+
+    response =  driver.send_sms({:client => {:username => login_sms,:password => password_sms.to_s }, :sms => {:recipient => phone, :eco=> 1, :sender => "SMSAPI", :message => message.to_ascii+"[%1%]",  :date_send => 0, :idx => nil,
+            :single_message => nil,
+            :no_unicode => 1,
+            :datacoding => nil,
+            :partner_id => nil,
+            :test => 1,
+            :priority => nil,
+            :udh => nil,
+            :flash => nil,
+            :details => nil
+} })
+
+
+    p response
+      end #jesli jest kasa
+
+        end #jesli jest numer
+
+ end #jesli jest co wyslac
+    
+  end
 
 
    def send_mail(user, assigned_issues, auth_issues)
@@ -175,6 +237,8 @@ namespace :redmine do
     options[:role]    = ENV['role']
     options[:tracker] = ENV['tracker']
     options[:status]  = ENV['status']
+    options[:login]    = ENV['login']
+    options[:password] =ENV['password']
 
     RB_Assigner.reminders_all(options)
   end
