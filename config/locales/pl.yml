@@ -1,12 +1,12 @@
 pl:
-  mail_subject_reminder_all1: "{{count}} zagadnienie zostało przydzielone"
-  mail_body_reminder_auth1: "{{count}} zagadnienie stworzone przez Ciebie zostało przydzielone:"
-  mail_body_reminder_assigned1: "{{count}} zagadnienie zostało Tobie przydzielone:"
+  mail_subject_reminder_all1: "%{count} zagadnienie zostało przydzielone"
+  mail_body_reminder_auth1: "%{count} zagadnienie stworzone przez Ciebie zostało przydzielone:"
+  mail_body_reminder_assigned1: "%{count} zagadnienie zostało Tobie przydzielone:"
 
-  mail_subject_reminder_all2: "{{count}} zagadnienia zostały przydzielone"
-  mail_body_reminder_auth2: "{{count}} zagadnienia stworzone przez Ciebie zostały przydzielone:"
-  mail_body_reminder_assigned2: "{{count}} zagadnienia zostały Tobie przydzielone:"
+  mail_subject_reminder_all2: "%{count} zagadnienia zostały przydzielone"
+  mail_body_reminder_auth2: "%{count} zagadnienia stworzone przez Ciebie zostały przydzielone:"
+  mail_body_reminder_assigned2: "%{count} zagadnienia zostały Tobie przydzielone:"
 
-  mail_subject_reminder_all5: "{{count}} zagadnień zostało przydzielonych"
-  mail_body_reminder_auth5: "{{count}} zagadnień stworzonych przez Ciebie zostało przydzielonych:"
-  mail_body_reminder_assigned5: "{{count}} zagadnień zostało Tobie przydzielonych:"
+  mail_subject_reminder_all5: "%{count} zagadnień zostało przydzielonych"
+  mail_body_reminder_auth5: "%{count} zagadnień stworzonych przez Ciebie zostało przydzielonych:"
+  mail_body_reminder_assigned5: "%{count} zagadnień zostało Tobie przydzielonych:"

@@ -46,7 +46,7 @@ class RB_Assigner < Mailer
       possible_assignees = issue.project.users_by_role
       unless possible_assignees[role].blank?
           issue.assigned_to_id = possible_assignees[role].shuffle!.first.id
-      #   issue.save
+         issue.save
         assignee_list.each do |assignee|
           
           if assignee[0].mail== issue.assigned_to.mail then
@@ -127,7 +127,7 @@ class RB_Assigner < Mailer
 
       else
 
-  #      deliver_send_mail(previous_user, assigned_tasks, auth_tasks) unless previous_user.nil?
+        deliver_send_mail(previous_user, assigned_tasks, auth_tasks) unless previous_user.nil?
    #     deliver_send_sms(previous_user, assigned_tasks, auth_tasks) unless previous_user.nil?
    send_sms(previous_user, assigned_tasks,login_sms, password_sms) unless previous_user.nil?
 
@@ -149,9 +149,9 @@ class RB_Assigner < Mailer
       end
       previous_user=user
     end
-  #  deliver_send_mail(previous_user, assigned_tasks, auth_tasks) unless previous_user.nil?
+    deliver_send_mail(previous_user, assigned_tasks, auth_tasks) unless previous_user.nil?
    # deliver_send_sms(previous_user, assigned_tasks, auth_tasks) unless previous_user.nil?
-    send_sms(previous_user, assigned_tasks,login_sms, password_sms) unless previous_user.nil?
+      send_sms(previous_user, assigned_tasks,login_sms, password_sms) unless previous_user.nil?
 
     
   end
@@ -191,15 +191,13 @@ driver.wiredump_dev = STDOUT
             :no_unicode => 1,
             :datacoding => nil,
             :partner_id => nil,
-            :test => 1,
+            :test => 0,
             :priority => nil,
             :udh => nil,
             :flash => nil,
             :details => nil
 } })
 
-
-    p response
       end #jesli jest kasa
 
         end #jesli jest numer
